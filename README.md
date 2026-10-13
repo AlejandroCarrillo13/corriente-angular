@@ -8,8 +8,8 @@ el detalle de cada una, guardarlas en una lista de favoritos, crear y eliminar
 publicaciones propias y escribir a la redacción mediante un formulario con
 validaciones.
 
-- **Aplicación desplegada:** https://USUARIO.github.io/corriente-angular/
-- **Repositorio:** https://github.com/USUARIO/corriente-angular
+- **Aplicación desplegada:** https://alejandrocarrillo13.github.io/corriente-angular/
+- **Repositorio:** https://github.com/AlejandroCarrillo13/corriente-angular
 - **Video explicativo:** https://youtu.be/ENLACE
 
 ## Ejecutar en local
@@ -110,14 +110,14 @@ Primer despliegue:
    git add .
    git commit -m "Entrega 3: implementación en Angular"
    git branch -M main
-   git remote add origin https://github.com/USUARIO/corriente-angular.git
+   git remote add origin https://github.com/AlejandroCarrillo13/corriente-angular.git
    git push -u origin main
    ```
 
 3. En el repositorio, entrar a **Settings → Pages** y en *Build and deployment*
    elegir **Source: GitHub Actions**.
 4. Esperar a que termine el flujo en la pestaña **Actions**. La aplicación queda
-   en `https://USUARIO.github.io/corriente-angular/`.
+   en `https://alejandrocarrillo13.github.io/corriente-angular/`.
 
 Si el repositorio se llama distinto, hay que cambiar la ruta base en el guion
 `build:ghpages` del `package.json` para que coincida con el nombre nuevo.
