@@ -1,0 +1,151 @@
+<!-- Franja de última hora -->
+<div class="ultima-hora">
+  <div class="contenedor">
+    <span class="etiqueta"><span class="pulso"></span> Última hora</span>
+    <span class="titular">Aprueban el plan de fibra óptica para 40 municipios del Pacífico</span>
+    <span class="sep"></span>
+    <span class="titular">El peso cierra su tercera semana al alza</span>
+  </div>
+</div>
+
+<!-- Sección de bienvenida y llamados a la acción -->
+<section class="bienvenida">
+  <div class="contenedor">
+    <div>
+      <h1>Lo que pasa en la región, contado en el tiempo que tienes.</h1>
+      <p>
+        Cada mañana seleccionamos las noticias de tecnología, ciencia, negocios y
+        cultura, las resumimos en un párrafo y te dejamos el enlace para profundizar
+        cuando quieras.
+      </p>
+    </div>
+    <div class="ctas">
+      <a class="boton grande" routerLink="/noticias">Explorar noticias</a>
+      <a class="boton secundario grande" routerLink="/favoritos">Ver mis guardados</a>
+    </div>
+  </div>
+</section>
+
+<!-- Portada: noticia principal y titulares secundarios -->
+@if (principal(); as destacado) {
+  <section class="portada">
+    <div class="contenedor">
+      <article class="principal">
+        <div class="foto" [class]="'foto ' + claseCategoria(destacado)"></div>
+        <div class="texto">
+          <span class="categoria" [class]="'categoria ' + claseCategoria(destacado)">
+            {{ nombreCategoria(destacado) }}
+          </span>
+          <h2>{{ destacado.titulo }}</h2>
+          <p>{{ destacado.resumen }}</p>
+          <div class="pie">
+            <div class="meta">
+              <span>Por {{ destacado.autor }}</span>
+              <span>·</span>
+              <span>{{ destacado.lectura }} min de lectura</span>
+              <span class="hora">{{ destacado.fecha | date: "d 'de' MMMM 'de' y" }}</span>
+            </div>
+            <a class="boton" [routerLink]="['/noticia', destacado.id]">Ver más</a>
+          </div>
+        </div>
+      </article>
+
+      <aside class="secundarias">
+        <div class="rotulo">También hoy</div>
+        @for (noticia of secundarias(); track noticia.id; let ultima = $last) {
+          <a
+            class="nota-lista"
+            [routerLink]="['/noticia', noticia.id]"
+            [style.border-bottom]="ultima ? '0' : null"
+          >
+            <div class="foto" [class]="'foto ' + claseCategoria(noticia)"></div>
+            <div>
+              <h3>{{ noticia.titulo }}</h3>
+              <div class="meta">
+                <span class="categoria" [class]="'categoria ' + claseCategoria(noticia)">
+                  {{ nombreCategoria(noticia) }}
+                </span>
+                <span>{{ noticia.fecha | date: "d 'de' MMMM" }}</span>
+              </div>
+            </div>
+          </a>
+        }
+      </aside>
+    </div>
+  </section>
+} @else {
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="vacio">
+        <h3>Cargando el catálogo…</h3>
+        <p>Si este mensaje permanece, revisa que el archivo data/noticias.json esté disponible.</p>
+      </div>
+    </div>
+  </section>
+}
+
+<!-- Noticias destacadas: aquí se reutiliza el componente de tarjeta -->
+<section class="seccion">
+  <div class="contenedor">
+    <div class="encabezado-seccion">
+      <div>
+        <h2>Noticias destacadas</h2>
+        <p>Selección de la redacción. Toca la estrella para guardarlas en tu lista.</p>
+      </div>
+      <a routerLink="/noticias">Ver todas las noticias →</a>
+    </div>
+
+    <div class="rejilla">
+      @for (noticia of destacadas(); track noticia.id) {
+        <app-tarjeta-noticia [noticia]="noticia" />
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Sección informativa: testimonios -->
+<section class="franja-info">
+  <div class="contenedor">
+    <h2>Por qué la gente vuelve cada día</h2>
+    <div class="testimonios">
+      <div class="testimonio">
+        <p>
+          “Leo el resumen mientras desayuno y con eso me basta para el día. Si algo me
+          interesa, lo guardo y lo abro en la noche.”
+        </p>
+        <div class="quien">Marcela A. · docente · Bogotá</div>
+      </div>
+      <div class="testimonio">
+        <p>
+          “Los enlaces a las fuentes originales son lo que más valoro. No tengo que
+          creerles: puedo verificar.”
+        </p>
+        <div class="quien">Julián P. · ingeniero · Medellín</div>
+      </div>
+      <div class="testimonio">
+        <p>
+          “Guardar noticias funciona incluso sin conexión. En el bus es lo único que me
+          carga rápido.”
+        </p>
+        <div class="quien">Sofía R. · estudiante · Cali</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Llamado a la acción final -->
+<section class="llamado">
+  <div class="contenedor">
+    <div>
+      <h2>¿Tienes una noticia que contar?</h2>
+      <p>
+        Publica tu nota desde el panel de redacción o escríbenos. Revisamos todas las
+        propuestas que llegan por el formulario de contacto.
+      </p>
+    </div>
+    <div class="acciones-cta">
+      <a class="boton grande" routerLink="/redaccion">Crear una noticia</a>
+      <a class="boton grande borde" routerLink="/contacto">Escribir a la redacción</a>
+    </div>
+  </div>
+</section>

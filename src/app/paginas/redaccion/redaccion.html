@@ -1,0 +1,195 @@
+<section class="titulo-pagina">
+  <div class="contenedor">
+    <div class="miga"><a routerLink="/">Inicio</a> / Redacción</div>
+    <h1>Panel de redacción</h1>
+    <p>
+      Crea una noticia nueva o elimina una existente. Los cambios se guardan en el
+      navegador junto al contenido que viene de <code>data/noticias.json</code>.
+    </p>
+    <div class="filtros">
+      <span class="aviso-local">
+        ◆ {{ catalogo().length }} noticias · {{ totalPropias() }}
+        {{ totalPropias() === 1 ? 'creada por ti' : 'creadas por ti' }}
+      </span>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" style="padding-top: 28px">
+  <div class="contenedor">
+    <div class="dos-columnas">
+      <div class="tarjeta-form">
+        <h2>Nueva noticia</h2>
+        <p class="ayuda">Los campos marcados con * son obligatorios.</p>
+
+        @if (aviso(); as mensaje) {
+          <div [class]="mensaje.tipo === 'exito' ? 'confirmacion' : 'aviso-local'">
+            {{ mensaje.texto }}
+          </div>
+        }
+
+        <!-- (ngSubmit) enlaza el envío del formulario con el método publicar() -->
+        <form (ngSubmit)="publicar()" #formulario="ngForm" novalidate>
+          <div class="fila">
+            <div class="campo">
+              <label for="titulo">Titular <span class="req">*</span></label>
+              <input
+                id="titulo"
+                name="titulo"
+                type="text"
+                class="entrada"
+                [class.error]="errores()['titulo']"
+                placeholder="Mínimo 15 caracteres"
+                [(ngModel)]="borrador.titulo"
+                (blur)="revisar('titulo')"
+              />
+              @if (errores()['titulo']; as error) {
+                <div class="mensaje-error">▲ {{ error }}</div>
+              }
+            </div>
+
+            <div class="campo">
+              <label for="categoria">Categoría <span class="req">*</span></label>
+              <select
+                id="categoria"
+                name="categoria"
+                class="entrada"
+                [class.error]="errores()['categoria']"
+                [(ngModel)]="borrador.categoria"
+                (blur)="revisar('categoria')"
+              >
+                <option value="">Selecciona una sección</option>
+                @for (categoria of categorias; track categoria.clave) {
+                  <option [value]="categoria.clave">{{ categoria.nombre }}</option>
+                }
+              </select>
+              @if (errores()['categoria']; as error) {
+                <div class="mensaje-error">▲ {{ error }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="resumen">Descripción breve <span class="req">*</span></label>
+            <input
+              id="resumen"
+              name="resumen"
+              type="text"
+              class="entrada"
+              [class.error]="errores()['resumen']"
+              placeholder="La frase que aparecerá en la tarjeta del listado"
+              [(ngModel)]="borrador.resumen"
+              (blur)="revisar('resumen')"
+            />
+            @if (errores()['resumen']; as error) {
+              <div class="mensaje-error">▲ {{ error }}</div>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="autor">Autor</label>
+            <input
+              id="autor"
+              name="autor"
+              type="text"
+              class="entrada"
+              placeholder="Opcional. Por defecto: Redacción Corriente"
+              [(ngModel)]="borrador.autor"
+            />
+          </div>
+
+          <div class="campo">
+            <label for="contenido">Contenido completo <span class="req">*</span></label>
+            <textarea
+              id="contenido"
+              name="contenido"
+              class="entrada"
+              [class.error]="errores()['contenido']"
+              placeholder="Mínimo 120 caracteres. Deja una línea en blanco para separar párrafos."
+              [(ngModel)]="borrador.contenido"
+              (blur)="revisar('contenido')"
+            ></textarea>
+            @if (errores()['contenido']; as error) {
+              <div class="mensaje-error">▲ {{ error }}</div>
+            }
+          </div>
+
+          <div style="display: flex; gap: 12px">
+            <button class="boton grande" type="submit">Publicar noticia</button>
+            <button class="boton secundario grande" type="button" (click)="limpiar()">
+              Limpiar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel-lateral">
+        <h3>Cómo funciona</h3>
+        <div class="dato">
+          <span class="icono">1</span>
+          <div><strong>Crear</strong>El formulario valida los campos y el servicio agrega la noticia a la señal del catálogo.</div>
+        </div>
+        <div class="dato">
+          <span class="icono">2</span>
+          <div><strong>Guardar</strong>El servicio escribe las noticias propias en localStorage.</div>
+        </div>
+        <div class="dato">
+          <span class="icono">3</span>
+          <div><strong>Eliminar</strong>Se pide confirmación y se quita de la señal; la tabla se actualiza sola.</div>
+        </div>
+        <div class="dato">
+          <span class="icono">4</span>
+          <div><strong>Ver</strong>Las noticias creadas aparecen en el listado y en el inicio como cualquier otra.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 36px">
+      <div class="encabezado-seccion">
+        <div>
+          <h2>Noticias publicadas</h2>
+          <p>
+            Las creadas desde este panel se pueden eliminar; las del archivo base se
+            muestran solo para consulta.
+          </p>
+        </div>
+      </div>
+
+      <table class="tabla">
+        <tr>
+          <th style="width: 44%">Noticia</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Origen</th>
+          <th>Acciones</th>
+        </tr>
+        @for (noticia of catalogo(); track noticia.id) {
+          <tr>
+            <td>
+              <div class="celda-titulo">
+                <span class="mini-foto" [class]="'foto mini-foto ' + claseCategoria(noticia)"></span>
+                <a [routerLink]="['/noticia', noticia.id]">{{ noticia.titulo }}</a>
+              </div>
+            </td>
+            <td>
+              <span class="categoria" [class]="'categoria ' + claseCategoria(noticia)">
+                {{ nombreCategoria(noticia) }}
+              </span>
+            </td>
+            <td>{{ noticia.fecha | date: "d 'de' MMMM 'de' y" }}</td>
+            <td>{{ noticia.propia ? 'Creada por ti' : 'noticias.json' }}</td>
+            <td>
+              @if (noticia.propia) {
+                <button type="button" class="boton peligro" (click)="eliminar(noticia)">
+                  Eliminar
+                </button>
+              } @else {
+                <span style="color: #8b94a2; font-size: 13px">Solo lectura</span>
+              }
+            </td>
+          </tr>
+        }
+      </table>
+    </div>
+  </div>
+</section>

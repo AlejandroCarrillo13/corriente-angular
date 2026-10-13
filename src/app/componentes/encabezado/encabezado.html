@@ -1,0 +1,50 @@
+<!--
+  Enlaces de la plantilla:
+  - {{ }}            interpolación: fecha y contador de guardados
+  - [routerLink]     enlace de propiedad hacia la ruta de cada página
+  - routerLinkActive marca el enlace de la página actual sin JavaScript propio
+  - [(ngModel)]      enlace en dos vías con la propiedad `termino`
+  - (ngSubmit)       enlace de evento hacia el método `buscar()`
+-->
+<div class="barra-superior">
+  <div class="contenedor">
+    <span>{{ hoy | date: "EEEE d 'de' MMMM 'de' y" }} &nbsp;·&nbsp; Edición Colombia</span>
+    <span>Proyecto académico · Desarrollo de Front-end</span>
+  </div>
+</div>
+
+<header class="cabecera">
+  <div class="contenedor">
+    <a class="marca" routerLink="/">
+      <span class="logo">Corriente<span class="punto"></span></span>
+      <span class="lema">noticias en movimiento</span>
+    </a>
+
+    <nav class="menu">
+      @for (pagina of paginas; track pagina.ruta) {
+        <a
+          [routerLink]="pagina.ruta"
+          routerLinkActive="activo"
+          [routerLinkActiveOptions]="{ exact: pagina.ruta === '/' }"
+        >{{ pagina.texto }}</a>
+      }
+    </nav>
+
+    <div class="acciones">
+      <form class="buscador" role="search" (ngSubmit)="buscar()">
+        <label class="oculto" for="q">Buscar una noticia</label>
+        <input
+          id="q"
+          name="q"
+          type="search"
+          placeholder="Buscar una noticia"
+          [(ngModel)]="termino"
+        />
+      </form>
+
+      <a class="boton secundario" routerLink="/favoritos">
+        ★ Guardados ({{ favoritos.total() }})
+      </a>
+    </div>
+  </div>
+</header>

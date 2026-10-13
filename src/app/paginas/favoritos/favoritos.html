@@ -1,0 +1,45 @@
+<section class="titulo-pagina">
+  <div class="contenedor">
+    <div class="miga"><a routerLink="/">Inicio</a> / Favoritos</div>
+    <h1>Mis noticias guardadas</h1>
+    <p>La lista vive en este navegador. Si borras los datos del sitio, se borra la lista.</p>
+
+    <div class="filtros">
+      <span class="aviso-local">{{ aviso() }}</span>
+      <div class="derecha">
+        <button
+          type="button"
+          class="boton peligro"
+          [disabled]="guardadas().length === 0"
+          (click)="vaciar()"
+        >Vaciar la lista</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" style="padding-top: 28px">
+  <div class="contenedor">
+    @if (guardadas().length === 0) {
+      <div class="vacio">
+        <h3>Todavía no has guardado nada</h3>
+        <p>Toca la estrella en cualquier noticia y aparecerá aquí para leerla después.</p>
+        <a class="boton grande" routerLink="/noticias">Explorar noticias</a>
+      </div>
+    } @else {
+      @if (confirmacion()) {
+        <div class="aviso-local" style="margin-bottom:18px">{{ confirmacion() }}</div>
+      }
+
+      <!-- (guardadoCambiado) escucha el evento @Output que emite la tarjeta -->
+      <div class="rejilla">
+        @for (noticia of guardadas(); track noticia.id) {
+          <app-tarjeta-noticia
+            [noticia]="noticia"
+            (guardadoCambiado)="alGuardarCambiar($event)"
+          />
+        }
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,52 @@
+<footer class="pie-pagina">
+  <div class="contenedor">
+    <div class="columnas-pie">
+      <div>
+        <div class="marca">
+          <span class="logo">Corriente<span class="punto"></span></span>
+        </div>
+        <p>
+          Plataforma de noticias de tecnología, ciencia, negocios y cultura de América
+          Latina. Proyecto académico del módulo de Desarrollo Front-end.
+        </p>
+      </div>
+
+      <div>
+        <h4>Secciones</h4>
+        <ul>
+          @for (categoria of categorias; track categoria.clave) {
+            <li>
+              <a routerLink="/noticias" [queryParams]="{ categoria: categoria.clave }">
+                {{ categoria.nombre }}
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h4>Navegación</h4>
+        <ul>
+          @for (pagina of paginas; track pagina.ruta) {
+            <li><a [routerLink]="pagina.ruta">{{ pagina.texto }}</a></li>
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li>redaccion&#64;corriente.co</li>
+          <li>+57 601 555 0184</li>
+          <li>Calle 72 #10-34, Bogotá</li>
+          <li>Instagram · X · YouTube</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="legal">
+      <span>© {{ anio }} Corriente. Contenido de demostración con fines académicos.</span>
+      <span>Términos · Privacidad · Mapa del sitio</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,174 @@
+<section class="titulo-pagina">
+  <div class="contenedor">
+    <div class="miga"><a routerLink="/">Inicio</a> / Contacto</div>
+    <h1>Escríbele a la redacción</h1>
+    <p>
+      Propuestas de temas, correcciones o pauta. Respondemos en horario laboral, de
+      lunes a viernes.
+    </p>
+    <div style="height: 22px"></div>
+  </div>
+</section>
+
+<section class="seccion" style="padding-top: 28px">
+  <div class="contenedor">
+    <div class="dos-columnas">
+      <div class="tarjeta-form">
+        <!-- @if muestra la confirmación solo cuando el envío fue válido -->
+        @if (enviado()) {
+          <div class="confirmacion" role="status">
+            ✔ &nbsp;
+            <div>
+              <strong>Mensaje enviado.</strong> Gracias, {{ nombreEnviado() }}. Te
+              responderemos al correo registrado en un plazo de dos días hábiles.
+            </div>
+          </div>
+        }
+
+        <h2>Formulario de contacto</h2>
+        <p class="ayuda">Los campos marcados con * son obligatorios.</p>
+
+        <form (ngSubmit)="enviar()" novalidate>
+          <div class="fila">
+            <div class="campo">
+              <label for="nombre">Nombre completo <span class="req">*</span></label>
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                class="entrada"
+                [class.error]="errores()['nombre']"
+                [class.ok]="valido('nombre')"
+                placeholder="Nombre y apellido"
+                [(ngModel)]="datos.nombre"
+                (blur)="revisar('nombre')"
+              />
+              @if (errores()['nombre']; as error) {
+                <div class="mensaje-error">▲ {{ error }}</div>
+              }
+            </div>
+
+            <div class="campo">
+              <label for="correo">Correo electrónico <span class="req">*</span></label>
+              <input
+                id="correo"
+                name="correo"
+                type="email"
+                class="entrada"
+                [class.error]="errores()['correo']"
+                [class.ok]="valido('correo')"
+                placeholder="nombre@dominio.com"
+                [(ngModel)]="datos.correo"
+                (blur)="revisar('correo')"
+              />
+              @if (errores()['correo']; as error) {
+                <div class="mensaje-error">▲ {{ error }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="fila">
+            <div class="campo">
+              <label for="telefono">Teléfono</label>
+              <input
+                id="telefono"
+                name="telefono"
+                type="tel"
+                class="entrada"
+                [class.error]="errores()['telefono']"
+                placeholder="Opcional"
+                [(ngModel)]="datos.telefono"
+                (blur)="revisar('telefono')"
+              />
+              @if (errores()['telefono']; as error) {
+                <div class="mensaje-error">▲ {{ error }}</div>
+              }
+            </div>
+
+            <div class="campo">
+              <label for="motivo">Motivo <span class="req">*</span></label>
+              <select
+                id="motivo"
+                name="motivo"
+                class="entrada"
+                [class.error]="errores()['motivo']"
+                [(ngModel)]="datos.motivo"
+                (blur)="revisar('motivo')"
+              >
+                <option value="">Selecciona un motivo</option>
+                <option value="tema">Proponer un tema</option>
+                <option value="correccion">Reportar una corrección</option>
+                <option value="pauta">Pauta y alianzas</option>
+                <option value="otro">Otro</option>
+              </select>
+              @if (errores()['motivo']; as error) {
+                <div class="mensaje-error">▲ {{ error }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="mensaje">Mensaje <span class="req">*</span></label>
+            <textarea
+              id="mensaje"
+              name="mensaje"
+              class="entrada"
+              [class.error]="errores()['mensaje']"
+              placeholder="Cuéntanos en pocas líneas de qué se trata."
+              [(ngModel)]="datos.mensaje"
+              (blur)="revisar('mensaje')"
+            ></textarea>
+            <!-- El contador se actualiza solo: lee la misma propiedad enlazada -->
+            <div
+              class="contador"
+              [style.color]="datos.mensaje.length > LIMITE_MENSAJE ? '#a52626' : null"
+            >
+              {{ datos.mensaje.length }} / {{ LIMITE_MENSAJE }} caracteres
+            </div>
+            @if (errores()['mensaje']; as error) {
+              <div class="mensaje-error">▲ {{ error }}</div>
+            }
+          </div>
+
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap">
+            <button class="boton grande" type="submit">Enviar mensaje</button>
+            <button class="boton secundario grande" type="button" (click)="borrar()">
+              Borrar
+            </button>
+            <span style="font-size: 13px; color: #5a6472">
+              La validación ocurre al salir de cada campo y al enviar.
+            </span>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel-lateral">
+        <h3>Otros canales</h3>
+        <div class="dato">
+          <span class="icono">✉</span>
+          <div><strong>Correo</strong>redaccion&#64;corriente.co</div>
+        </div>
+        <div class="dato">
+          <span class="icono">☎</span>
+          <div><strong>Teléfono</strong>+57 601 555 0184</div>
+        </div>
+        <div class="dato">
+          <span class="icono">⌂</span>
+          <div><strong>Oficina</strong>Calle 72 #10-34, piso 4, Bogotá</div>
+        </div>
+        <div class="dato">
+          <span class="icono">◷</span>
+          <div><strong>Horario</strong>Lunes a viernes, 8:00 a. m. a 6:00 p. m.</div>
+        </div>
+        <div class="dato">
+          <span class="icono">◈</span>
+          <div><strong>Redes</strong>&#64;corriente.co en Instagram y X</div>
+        </div>
+        <div class="foto tec" style="margin-top: 18px; height: 150px"></div>
+        <div style="font-size: 13px; color: #5a6472; margin-top: 8px">
+          Ubicación de la oficina (mapa de referencia).
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

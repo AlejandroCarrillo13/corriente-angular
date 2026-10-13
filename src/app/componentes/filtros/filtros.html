@@ -1,0 +1,42 @@
+<div class="filtros">
+  <!-- [class.activo] enlaza una clase a una condición; (click) emite al padre -->
+  <button
+    type="button"
+    class="chip"
+    [class.activo]="categoria === 'todas'"
+    (click)="seleccionarCategoria('todas')"
+  >Todas</button>
+
+  @for (item of categorias; track item.clave) {
+    <button
+      type="button"
+      class="chip"
+      [class.activo]="categoria === item.clave"
+      (click)="seleccionarCategoria(item.clave)"
+    >{{ item.nombre }}</button>
+  }
+
+  <div class="derecha">
+    <label class="oculto" for="busqueda">Buscar en el listado</label>
+    <input
+      id="busqueda"
+      class="entrada busqueda-listado"
+      type="search"
+      placeholder="Buscar por título o resumen"
+      [value]="termino"
+      (input)="escribirTermino($any($event.target).value)"
+    />
+
+    <label class="oculto" for="orden">Ordenar por</label>
+    <select
+      id="orden"
+      class="selector"
+      [value]="orden"
+      (change)="cambiarOrden($any($event.target).value)"
+    >
+      <option value="recientes">Más recientes</option>
+      <option value="antiguas">Más antiguas</option>
+      <option value="titulo">Título (A-Z)</option>
+    </select>
+  </div>
+</div>

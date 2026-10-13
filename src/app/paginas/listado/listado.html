@@ -1,0 +1,76 @@
+<section class="titulo-pagina">
+  <div class="contenedor">
+    <div class="miga"><a routerLink="/">Inicio</a> / Noticias</div>
+    <h1>Todas las noticias</h1>
+    <p>
+      El listado se construye con el catálogo que entrega el servicio de noticias.
+      Los filtros y el buscador recalculan el resultado sin volver a pedir el archivo.
+    </p>
+
+    <!--
+      Enlace en los dos sentidos con el componente de filtros:
+      [categoria] baja el estado al hijo y (categoriaCambiada) lo devuelve.
+    -->
+    <app-filtros
+      [categoria]="categoria()"
+      [termino]="termino()"
+      [orden]="orden()"
+      (categoriaCambiada)="cambiarCategoria($event)"
+      (terminoCambiado)="cambiarTermino($event)"
+      (ordenCambiado)="cambiarOrden($event)"
+    />
+  </div>
+</section>
+
+<section class="seccion" style="padding-top: 28px">
+  <div class="contenedor">
+    @if (resultado().length === 0) {
+      <div class="conteo">Sin resultados</div>
+      <div class="vacio">
+        <h3>Ninguna noticia coincide con la búsqueda</h3>
+        <p>Prueba con otra palabra o quita el filtro de categoría.</p>
+        <button type="button" class="boton grande" (click)="limpiarFiltros()">
+          Ver todas las noticias
+        </button>
+      </div>
+    } @else {
+      <div class="conteo">
+        Mostrando {{ visibles().length }} de {{ resultado().length }}
+        {{ resultado().length === 1 ? 'noticia' : 'noticias' }}
+      </div>
+
+      <div class="rejilla cuatro">
+        @for (noticia of visibles(); track noticia.id) {
+          <app-tarjeta-noticia [noticia]="noticia" />
+        }
+      </div>
+
+      @if (totalPaginas() > 1) {
+        <div class="paginacion">
+          <button
+            type="button"
+            class="pag"
+            [disabled]="pagina() === 1"
+            (click)="irAPagina(pagina() - 1)"
+          >←</button>
+
+          @for (numero of paginas(); track numero) {
+            <button
+              type="button"
+              class="pag"
+              [class.activo]="numero === pagina()"
+              (click)="irAPagina(numero)"
+            >{{ numero }}</button>
+          }
+
+          <button
+            type="button"
+            class="pag"
+            [disabled]="pagina() === totalPaginas()"
+            (click)="irAPagina(pagina() + 1)"
+          >→</button>
+        </div>
+      }
+    }
+  </div>
+</section>

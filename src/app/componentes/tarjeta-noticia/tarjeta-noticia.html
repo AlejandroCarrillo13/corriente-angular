@@ -1,0 +1,42 @@
+<!--
+  [class] y [routerLink] son enlaces de propiedad; (click) es enlace de evento.
+  El estado de la estrella se calcula leyendo la señal del servicio, de modo
+  que la tarjeta queda sincronizada aunque la noticia se guarde desde otra
+  vista de la aplicación.
+-->
+<article class="tarjeta">
+  <a
+    class="foto"
+    [class]="'foto ' + claseCategoria"
+    [routerLink]="['/noticia', noticia.id]"
+    [attr.aria-label]="noticia.titulo"
+  ></a>
+
+  <div class="cuerpo">
+    <span class="categoria" [class]="'categoria ' + claseCategoria">{{ nombreCategoria }}</span>
+
+    <h3>{{ noticia.titulo }}</h3>
+    <p>{{ noticia.resumen }}</p>
+
+    <div class="meta" style="margin-top: 12px">
+      <span>{{ noticia.fecha | date: "d 'de' MMMM 'de' y" }}</span>
+      <span>·</span>
+      <span>{{ noticia.lectura }} min</span>
+    </div>
+
+    <div class="pie">
+      <a class="boton" [routerLink]="['/noticia', noticia.id]">Ver más</a>
+
+      <button
+        type="button"
+        class="guardar"
+        [class.activo]="favoritos.esta(noticia.id)"
+        [attr.aria-pressed]="favoritos.esta(noticia.id)"
+        [title]="favoritos.esta(noticia.id) ? 'Quitar de favoritos' : 'Guardar en favoritos'"
+        (click)="alternarGuardado()"
+      >
+        {{ favoritos.esta(noticia.id) ? '★' : '☆' }}
+      </button>
+    </div>
+  </div>
+</article>
